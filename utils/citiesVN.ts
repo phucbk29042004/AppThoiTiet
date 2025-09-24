@@ -1,0 +1,28 @@
+// utils/citiesVN.ts
+export const citiesVN: string[] = [
+  "Hà Nội",
+  "Hồ Chí Minh",
+  "Đà Nẵng",
+  "Hải Phòng",
+  "Cần Thơ",
+  "Huế",
+  "Nha Trang",
+  "Đà Lạt",
+  "Vũng Tàu",
+  "Biên Hòa",
+  "Buôn Ma Thuột",
+  "Pleiku",
+  "Quy Nhơn",
+  "Thanh Hóa",
+  "Vinh",
+  "Nam Định",
+  "Hạ Long",
+  "Thái Nguyên",
+  "Bắc Giang",
+  "Lạng Sơn",
+  "Phan Thiết",
+  "Rạch Giá",
+  "Long Xuyên",
+  "Sóc Trăng",
+  "Cà Mau"
+];
