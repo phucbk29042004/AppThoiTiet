@@ -8,7 +8,7 @@ import {
   Alert,
   Image,
 } from "react-native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useRoute, RouteProp } from "@react-navigation/native";
 import { RootStackParamList } from "../navigation/types";
 
 const API_KEY = "e64ad377551ef1eac9ed78fbfccb2b9a";
@@ -22,9 +22,10 @@ function removeVietnameseTones(str: string) {
     .replace(/Đ/g, "D");
 }
 
-type Props = NativeStackScreenProps<RootStackParamList, "Detail">;
+type DetailRouteProp = RouteProp<RootStackParamList, "Detail">;
 
-export default function DetailScreen({ route }: Props) {
+export default function DetailScreen() {
+  const route = useRoute<DetailRouteProp>();
   const { city } = route.params;
   const [weather, setWeather] = useState<any>(null);
   const [loading, setLoading] = useState(true);

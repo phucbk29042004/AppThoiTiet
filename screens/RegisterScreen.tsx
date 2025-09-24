@@ -8,10 +8,16 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../navigation/types";
 
 const API_BASE = "http://172.20.10.8:5000"; // ⚠️ IP máy tính bạn + port backend
 
-export default function RegisterScreen({ navigation }: any) {
+type RegisterNavProp = NativeStackNavigationProp<RootStackParamList, "Register">;
+
+export default function RegisterScreen() {
+  const navigation = useNavigation<RegisterNavProp>();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

@@ -1,5 +1,5 @@
 // screens/HomeScreen.tsx
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import {
   View,
   Text,
@@ -7,56 +7,124 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from "react-native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Swipeable } from "react-native-gesture-handler";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/types";
-import { citiesVN } from "../utils/citiesVN";
+import { saveCities, loadCities } from "../utils/storage";
 import CityItem from "../components/CityItem";
+import { Ionicons } from "@expo/vector-icons";
 
-type Props = NativeStackScreenProps<RootStackParamList, "Home">;
+type HomeNavProp = NativeStackNavigationProp<RootStackParamList, "Home">;
 
-export default function HomeScreen({ navigation }: Props) {
+export default function HomeScreen() {
+  const navigation = useNavigation<HomeNavProp>();
+  const [cities, setCities] = useState<string[]>([]);
+  const [newCity, setNewCity] = useState("");
   const [keyword, setKeyword] = useState("");
 
-  // 🟢 Thêm nút Logout trên header
+  // Logout button
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity
-          onPress={() => navigation.replace("Login")}
+          onPress={() => {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Login" }],
+            });
+          }}
           style={{ marginRight: 12 }}
         >
-          <Text style={{ color: "#FF4500", fontWeight: "bold" }}>Logout</Text>
+          <Ionicons name="log-out-outline" size={24} color="#FF4500" />
         </TouchableOpacity>
       ),
     });
   }, [navigation]);
 
-  // Lọc danh sách theo từ khóa
-  const data = citiesVN.filter((c) =>
+  // 🟢 Load cities khi mở app
+  useEffect(() => {
+    (async () => {
+      const stored = await loadCities();
+      setCities(stored.length > 0 ? stored : ["Hà Nội", "Hồ Chí Minh"]);
+    })();
+  }, []);
+
+  // 🟢 Lưu cities khi thay đổi
+  useEffect(() => {
+    saveCities(cities);
+  }, [cities]);
+
+  const addCity = () => {
+    if (!newCity.trim()) {
+      Alert.alert("Lỗi", "Tên thành phố không được để trống!");
+      return;
+    }
+    if (cities.includes(newCity.trim())) {
+      Alert.alert("Thông báo", "Thành phố đã tồn tại!");
+      return;
+    }
+    setCities([...cities, newCity.trim()]);
+    setNewCity("");
+  };
+
+  const handleDeleteCity = (city: string) => {
+    Alert.alert("Xác nhận", `Bạn có muốn xóa ${city}?`, [
+      { text: "Hủy", style: "cancel" },
+      {
+        text: "Xóa",
+        style: "destructive",
+        onPress: () => {
+          const updated = cities.filter((c) => c !== city);
+          setCities(updated);
+          saveCities(updated);
+        },
+      },
+    ]);
+  };
+
+  const filtered = cities.filter((c) =>
     c.toLowerCase().includes(keyword.trim().toLowerCase())
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Thành phố / Tỉnh (VN)</Text>
+      <Text style={styles.title}>Danh sách thành phố</Text>
+
+      {/* Ô tìm kiếm */}
       <TextInput
         style={styles.search}
-        placeholder="Tìm kiếm thành phố..."
+        placeholder="Tìm kiếm..."
         value={keyword}
         onChangeText={setKeyword}
       />
 
+      {/* Ô nhập city mới */}
+      <View style={styles.addRow}>
+        <TextInput
+          style={[styles.search, { flex: 1, marginBottom: 0 }]}
+          placeholder="Nhập thành phố mới..."
+          value={newCity}
+          onChangeText={setNewCity}
+        />
+        <TouchableOpacity style={styles.addBtn} onPress={addCity}>
+          <Text style={{ color: "#fff", fontWeight: "bold" }}>Thêm</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Danh sách với swipe-to-delete */}
       <FlatList
-        data={data}
+        data={filtered}
         keyExtractor={(item) => item}
         renderItem={({ item }) => (
           <CityItem
             name={item}
             onPress={() => navigation.navigate("Detail", { city: item })}
+            onDelete={() => handleDeleteCity(item)}
           />
         )}
-        contentContainerStyle={{ paddingVertical: 8 }}
       />
     </View>
   );
@@ -73,5 +141,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#eee",
     marginBottom: 12,
+  },
+  addRow: { flexDirection: "row", alignItems: "center", marginBottom: 12 },
+  addBtn: {
+    backgroundColor: "#1E90FF",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    marginLeft: 8,
   },
 });

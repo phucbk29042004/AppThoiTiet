@@ -1,27 +1,43 @@
 // components/CityItem.tsx
 import React from "react";
-import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
+import {
+  Text,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Animated,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { RectButton, Swipeable } from "react-native-gesture-handler";
 
-type Props = { name: string; onPress: () => void };
+type Props = { name: string; onPress: () => void; onDelete: () => void };
 
-export default function CityItem({ name, onPress }: Props) {
-  // Giả lập icon thời tiết (bạn có thể đổi bằng data từ API nếu muốn)
-  const hour = new Date().getHours();
-  const isDay = hour >= 6 && hour < 18;
-  const weatherIcon = isDay ? "sunny-outline" : "moon-outline";
+export default function CityItem({ name, onPress, onDelete }: Props) {
+  // Nút xoá khi vuốt
+  const renderRightActions = (
+    progress: Animated.AnimatedInterpolation<number>,
+    dragX: Animated.AnimatedInterpolation<number>
+  ) => {
+    return (
+      <RectButton style={styles.deleteButton} onPress={onDelete}>
+        <Ionicons name="trash" size={22} color="#fff" />
+      </RectButton>
+    );
+  };
 
   return (
-    <TouchableOpacity style={styles.item} onPress={onPress} activeOpacity={0.7}>
-      <View style={styles.row}>
-        <Ionicons name={weatherIcon as any} size={26} color="#FFB300" />
-        <View style={{ marginLeft: 10 }}>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.sub}>Chạm để xem chi tiết</Text>
+    <Swipeable renderRightActions={renderRightActions}>
+      <TouchableOpacity style={styles.item} onPress={onPress} activeOpacity={0.7}>
+        <View style={styles.row}>
+          <Ionicons name="location-outline" size={22} color="#1E90FF" />
+          <View style={{ marginLeft: 10 }}>
+            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.sub}>Chạm để xem chi tiết thời tiết</Text>
+          </View>
         </View>
-      </View>
-      <Ionicons name="chevron-forward" size={20} color="#999" />
-    </TouchableOpacity>
+        <Ionicons name="chevron-forward" size={20} color="#999" />
+      </TouchableOpacity>
+    </Swipeable>
   );
 }
 
@@ -32,8 +48,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 16,
     backgroundColor: "#fff",
-    borderRadius: 12,
-    marginBottom: 12,
+    borderRadius: 10,
+    marginBottom: 10,
     borderWidth: 1,
     borderColor: "#eee",
     shadowColor: "#000",
@@ -44,4 +60,12 @@ const styles = StyleSheet.create({
   row: { flexDirection: "row", alignItems: "center" },
   name: { fontSize: 16, fontWeight: "600", marginBottom: 2, color: "#333" },
   sub: { color: "#666", fontSize: 12 },
+  deleteButton: {
+    backgroundColor: "red",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 70,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
 });

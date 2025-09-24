@@ -14,10 +14,17 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function AppNavigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerTitleAlign: "center" }}>
+      <Stack.Navigator
+        initialRouteName="Login"
+        screenOptions={{ headerTitleAlign: "center" }}
+      >
         <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Đăng nhập" }} />
         <Stack.Screen name="Register" component={RegisterScreen} options={{ title: "Đăng ký" }} />
-        <Stack.Screen name="Home" component={HomeScreen} options={{ title: "Thời tiết Việt Nam" }} />
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: "Danh sách thành phố" }}
+        />
         <Stack.Screen name="Detail" component={DetailScreen} options={{ title: "Chi tiết" }} />
       </Stack.Navigator>
     </NavigationContainer>
