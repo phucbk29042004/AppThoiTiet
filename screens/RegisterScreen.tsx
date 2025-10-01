@@ -39,7 +39,7 @@ export default function RegisterScreen() {
 
       if (res.ok) {
         Alert.alert("Thành công", "Đăng ký thành công!");
-        navigation.replace("Home"); // 👉 đăng ký xong chuyển sang Home
+        navigation.replace("Home"); // đăng ký xong chuyển sang Home
       } else {
         Alert.alert("Đăng ký thất bại", data.msg || "Có lỗi xảy ra!");
       }
@@ -51,7 +51,7 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>📝 Đăng ký tài khoản</Text>
+      <Text style={styles.title}>Đăng ký tài khoản</Text>
       <Text style={styles.subtitle}>Tạo tài khoản để xem thời tiết</Text>
 
       <TextInput

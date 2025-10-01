@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { Swipeable } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/types";
@@ -18,6 +17,18 @@ import CityItem from "../components/CityItem";
 import { Ionicons } from "@expo/vector-icons";
 
 type HomeNavProp = NativeStackNavigationProp<RootStackParamList, "Home">;
+
+// 🔹 Hàm bỏ dấu tiếng Việt + chuẩn hoá chuỗi
+function removeVietnameseTones(str: string) {
+  if (!str) return "";
+  return str
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D")
+    .toLowerCase()
+    .trim();
+}
 
 export default function HomeScreen() {
   const navigation = useNavigation<HomeNavProp>();
@@ -57,19 +68,24 @@ export default function HomeScreen() {
     saveCities(cities);
   }, [cities]);
 
+  // 🟢 Hàm thêm city (check trùng theo chuẩn không dấu)
   const addCity = () => {
-    if (!newCity.trim()) {
+    const candidate = newCity.trim();
+    if (!candidate) {
       Alert.alert("Lỗi", "Tên thành phố không được để trống!");
       return;
     }
-    if (cities.includes(newCity.trim())) {
+    const norm = removeVietnameseTones;
+    const isDup = cities.some((c) => norm(c) === norm(candidate));
+    if (isDup) {
       Alert.alert("Thông báo", "Thành phố đã tồn tại!");
       return;
     }
-    setCities([...cities, newCity.trim()]);
+    setCities([...cities, candidate]);
     setNewCity("");
   };
 
+  // 🟢 Hàm xóa city
   const handleDeleteCity = (city: string) => {
     Alert.alert("Xác nhận", `Bạn có muốn xóa ${city}?`, [
       { text: "Hủy", style: "cancel" },
@@ -85,8 +101,9 @@ export default function HomeScreen() {
     ]);
   };
 
+  // 🟢 Filter không phân biệt dấu
   const filtered = cities.filter((c) =>
-    c.toLowerCase().includes(keyword.trim().toLowerCase())
+    removeVietnameseTones(c).includes(removeVietnameseTones(keyword))
   );
 
   return (
@@ -99,6 +116,7 @@ export default function HomeScreen() {
         placeholder="Tìm kiếm..."
         value={keyword}
         onChangeText={setKeyword}
+        autoCorrect={false}  // tránh máy tự sửa chữ
       />
 
       {/* Ô nhập city mới */}
@@ -108,13 +126,14 @@ export default function HomeScreen() {
           placeholder="Nhập thành phố mới..."
           value={newCity}
           onChangeText={setNewCity}
+          autoCorrect={false}
         />
         <TouchableOpacity style={styles.addBtn} onPress={addCity}>
           <Text style={{ color: "#fff", fontWeight: "bold" }}>Thêm</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Danh sách với swipe-to-delete */}
+      {/* Danh sách */}
       <FlatList
         data={filtered}
         keyExtractor={(item) => item}

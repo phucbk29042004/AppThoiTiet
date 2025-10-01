@@ -2,7 +2,8 @@
   "name": "sample-app",
   "version": "1.0.0",
   "main": "index.ts",
-  "scripts": {
+  "scripts": 
+  {
     "start": "expo start",
     "dev": "expo start",
     "android": "expo start --android",

@@ -20,7 +20,7 @@ export default function CityItem({ name, onPress, onDelete }: Props) {
   ) => {
     return (
       <RectButton style={styles.deleteButton} onPress={onDelete}>
-        <Ionicons name="trash" size={22} color="#fff" />
+        <Ionicons name="trash" size={20} color="#fff" />
       </RectButton>
     );
   };
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
     justifyContent: "center",
     alignItems: "center",
-    width: 70,
+    width: 20,
     borderRadius: 10,
     marginBottom: 10,
   },

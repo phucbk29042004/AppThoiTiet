@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-const API_BASE = "http://172.20.10.8:5000"; // ⚠️ dùng cổng HTTP (5000) cho dễ test
+const API_BASE = "http://172.20.10.8:5000"; // dùng cổng HTTP (5000) cho dễ test
 
 export default function LoginScreen({ navigation }: any) {
   const [email, setEmail] = useState("");
