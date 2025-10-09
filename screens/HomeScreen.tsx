@@ -18,7 +18,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 type HomeNavProp = NativeStackNavigationProp<RootStackParamList, "Home">;
 
-// 🔹 Hàm bỏ dấu tiếng Việt + chuẩn hoá chuỗi
+// Hàm bỏ dấu tiếng Việt + chuẩn hoá chuỗi
 function removeVietnameseTones(str: string) {
   if (!str) return "";
   return str
@@ -55,7 +55,7 @@ export default function HomeScreen() {
     });
   }, [navigation]);
 
-  // 🟢 Load cities khi mở app
+  // Load cities khi mở app
   useEffect(() => {
     (async () => {
       const stored = await loadCities();
@@ -63,12 +63,12 @@ export default function HomeScreen() {
     })();
   }, []);
 
-  // 🟢 Lưu cities khi thay đổi
+  // Lưu cities khi thay đổi
   useEffect(() => {
     saveCities(cities);
   }, [cities]);
 
-  // 🟢 Hàm thêm city (check trùng theo chuẩn không dấu)
+  // Hàm thêm city (check trùng theo chuẩn không dấu)
   const addCity = () => {
     const candidate = newCity.trim();
     if (!candidate) {
@@ -85,7 +85,7 @@ export default function HomeScreen() {
     setNewCity("");
   };
 
-  // 🟢 Hàm xóa city
+  // Hàm xóa city
   const handleDeleteCity = (city: string) => {
     Alert.alert("Xác nhận", `Bạn có muốn xóa ${city}?`, [
       { text: "Hủy", style: "cancel" },
@@ -101,7 +101,7 @@ export default function HomeScreen() {
     ]);
   };
 
-  // 🟢 Filter không phân biệt dấu
+  // Filter không phân biệt dấu
   const filtered = cities.filter((c) =>
     removeVietnameseTones(c).includes(removeVietnameseTones(keyword))
   );

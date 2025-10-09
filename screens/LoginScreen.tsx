@@ -8,10 +8,16 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../navigation/types";
 
 const API_BASE = "http://172.20.10.8:5000"; // dùng cổng HTTP (5000) cho dễ test
 
-export default function LoginScreen({ navigation }: any) {
+type LoginNavProp = NativeStackNavigationProp<RootStackParamList, "Login">;
+
+export default function LoginScreen() {
+  const navigation = useNavigation<LoginNavProp>();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
