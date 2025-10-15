@@ -22,9 +22,21 @@ export default function RegisterScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // Hàm kiểm tra email có phải Gmail hợp lệ không
+  const isValidGmail = (email: string) => {
+    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    return gmailRegex.test(email);
+  };
+
   const handleRegister = async () => {
     if (!name || !email || !password) {
       Alert.alert("Lỗi", "Vui lòng nhập đầy đủ thông tin!");
+      return;
+    }
+
+    // Thêm kiểm tra Gmail ở đây
+    if (!isValidGmail(email)) {
+      Alert.alert("Lỗi", "Chỉ chấp nhận email có đuôi @gmail.com hợp lệ!");
       return;
     }
 
@@ -38,7 +50,7 @@ export default function RegisterScreen() {
       const data = await res.json();
 
       if (res.ok) {
-        Alert.alert("Thành công", "Đăng ký thành công!");
+        Alert.alert("Thành công", "Đăng ký tài khoản thành công!");
         navigation.replace("Home"); // đăng ký xong chuyển sang Home
       } else {
         Alert.alert("Đăng ký thất bại", data.msg || "Có lỗi xảy ra!");
@@ -130,6 +142,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
     marginTop: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3,
   },
   registerText: {
     color: "#fff",
