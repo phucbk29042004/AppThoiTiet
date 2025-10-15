@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../navigation/types";
 
-const API_BASE = "http://172.20.10.8:5000"; // ⚠️ IP máy tính bạn + port backend
+const API_BASE = "http://172.20.10.8:5000"; // IP máy tính + port backend
 
 type RegisterNavProp = NativeStackNavigationProp<RootStackParamList, "Register">;
 
